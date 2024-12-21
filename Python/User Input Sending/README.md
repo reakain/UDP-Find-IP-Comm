@@ -1,0 +1,2 @@
+# User Input Sending
+These are just some basic scripts for quick testing UDP comms. Type some input, hit enter, and it sends it out. There's a python 2.7 and a python 3 version. These do *not* use the initial IP address finding structure. They're just some pure dumb data send testing.

@@ -1,0 +1,2 @@
+# ESP8266 (D1 Mini) Data Sender
+This code would act as the "second" device, which listens for a "hello?" message, and sends back a "hello!" message, before sending additional information. It's designed to function on a D1 Mini.
