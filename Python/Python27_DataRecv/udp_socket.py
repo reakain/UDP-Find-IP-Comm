@@ -1,6 +1,7 @@
 import socket
 import json
 import time
+import select
 
 class UDPClient(object):
     """
@@ -49,10 +50,13 @@ class UDPClient(object):
         return recievedData
 
     def have_new_data(self):
-        data = self.get_message()
-        if data[1][0] == self.serverIPAddress:
-            self.packet = data[0].decode()
-            return True
+        readables, writables, errors=select.select([self.UDPClientSocket],[],[], 1)
+        for read_socket in readables:
+            data = self.get_message()
+            if data[1][0] == self.serverIPAddress:
+                self.packet = data[0].decode()
+                return True
+            return False
         return False
         
     def get_json_packet(self):
@@ -65,10 +69,12 @@ class UDPClient(object):
             self.broadcast_send(hello_request, comm_port)
             # wait a lil bit so we don't just slam the server
             time.sleep(2)
-            data = self.get_message()
-            returnMsg = data[0].decode('utf_8','strict')
-            if returnMsg == "hello!":
-                return data[1][0]
+            readables, writables, errors=select.select([self.UDPClientSocket],[],[], 1)
+            for read_socket in readables:
+                data = self.get_message()
+                returnMsg = data[0].decode('utf_8','strict')
+                if returnMsg == "hello!":
+                    return data[1][0]
 
     def broadcast_send(self, message, comm_port):
         msg = message.encode('utf_8','strict')
